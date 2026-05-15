@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ programme.nom }}{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-journal-text me-2" style="color:#2ecc71;"></i>{{ programme.nom }}</h1>
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_programme_edit', {'id': programme.id}) }}" class="btn btn-sport">
+            <i class="bi bi-pencil"></i> Modifier
+        </a>
+        <a href="{{ path('app_programme_index') }}" class="btn btn-outline-secondary" style="border-radius:30px;">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-modern p-4 mb-4">
+            <h5 class="fw-bold mb-3">Informations</h5>
+
+            <p class="text-muted mb-1" style="font-size:13px;">Nom</p>
+            <p class="fw-bold mb-3">{{ programme.nom }}</p>
+
+            <p class="text-muted mb-1" style="font-size:13px;">Description</p>
+            <p class="mb-3">{{ programme.description }}</p>
+
+            <div class="d-flex gap-3">
+                {% if programme.niveau %}
+                <div>
+                    <p class="text-muted mb-1" style="font-size:13px;">Niveau</p>
+                    {% set niveauClass = 'debutant' %}
+                    {% if programme.niveau|lower in ['intermediaire','intermédiaire'] %}{% set niveauClass = 'intermediaire' %}{% endif %}
+                    {% if programme.niveau|lower in ['avance','avancé'] %}{% set niveauClass = 'avance' %}{% endif %}
+                    <span class="badge-{{ niveauClass }}">{{ programme.niveau }}</span>
+                </div>
+                {% endif %}
+                {% if programme.categorie %}
+                <div>
+                    <p class="text-muted mb-1" style="font-size:13px;">Catégorie</p>
+                    <span class="badge bg-info bg-opacity-25 text-dark">
+                        <i class="bi bi-tag"></i> {{ programme.categorie.nom }}
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if programme.seances|length > 0 %}
+        <div class="card card-modern p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-calendar-check me-2" style="color:#2ecc71;"></i>Séances ({{ programme.seances|length }})</h5>
+            <div class="list-group list-group-flush">
+                {% for seance in programme.seances %}
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                    <div>
+                        <i class="bi bi-clock me-2 text-muted"></i>
+                        {{ seance.date ? seance.date|format_datetime(locale='fr', pattern='EEEE d MMMM yyyy') : '' }}
+                        <span class="text-muted ms-2">— {{ seance.duree }} min</span>
+                    </div>
+                    <a href="{{ path('app_seance_show', {'id': seance.id}) }}" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-modern p-4">
+            <h6 class="fw-bold mb-3">Actions</h6>
+            {{ include('programme/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

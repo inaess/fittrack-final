@@ -1,0 +1,17 @@
+{{ form_start(form) }}
+<div class="mb-3">
+    {{ form_label(form.nom) }}
+    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+</div>
+<div class="mb-4">
+    {{ form_label(form.imageFileUpload) }}
+    {{ form_widget(form.imageFileUpload) }}
+</div>
+<button type="submit" class="btn btn-sport w-100">
+    <i class="bi bi-check-circle me-2"></i>{{ button_label|default('Enregistrer') }}
+</button>
+{{ form_end(form) }}

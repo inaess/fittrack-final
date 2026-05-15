@@ -1,0 +1,13 @@
+{{ form_start(form) }}
+<div class="mb-3">
+    {{ form_label(form.nom) }}
+    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+</div>
+<div class="mb-4">
+    {{ form_label(form.couleur) }}
+    {{ form_widget(form.couleur, {'attr': {'class': 'form-control'}}) }}
+</div>
+<button type="submit" class="btn btn-sport w-100">
+    <i class="bi bi-check-circle me-2"></i>{{ button_label|default('Enregistrer') }}
+</button>
+{{ form_end(form) }}

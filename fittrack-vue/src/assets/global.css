@@ -1,0 +1,45 @@
+:root {
+  --sport-green: #2ecc71;
+  --sport-green-dark: #27ae60;
+  --dark-bg: #1e272e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f0f2f5;
+}
+
+.btn-sport {
+  background: var(--sport-green);
+  border: none;
+  border-radius: 30px;
+  padding: 8px 24px;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-sport:hover {
+  background: var(--sport-green-dark);
+  transform: scale(1.02);
+}
+
+.card-modern {
+  border: none;
+  border-radius: 16px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background: white;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.card-modern:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}

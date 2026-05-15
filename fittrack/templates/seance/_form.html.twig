@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+<div class="mb-3">
+    {{ form_label(form.date) }}
+    {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.duree) }}
+    {{ form_widget(form.duree, {'attr': {'class': 'form-control', 'placeholder': 'Durée en minutes'}}) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.Programme) }}
+    {{ form_widget(form.Programme, {'attr': {'class': 'form-select'}}) }}
+</div>
+<div class="mb-4">
+    {{ form_label(form.notes) }}
+    {{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+</div>
+<button type="submit" class="btn btn-sport w-100">
+    <i class="bi bi-check-circle me-2"></i>{{ button_label|default('Enregistrer') }}
+</button>
+{{ form_end(form) }}

@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+{% block title %}Séances{% endblock %}
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calendar-check me-2" style="color:#2ecc71;"></i>Séances</h1>
+        <a href="{{ path('app_seance_new') }}" class="btn btn-sport">
+            <i class="bi bi-plus-circle me-2"></i>Nouvelle séance
+        </a>
+    </div>
+
+    {# PLANIFIÉES #}
+    <h5 class="mb-3"><i class="bi bi-clock me-2" style="color:#f39c12;"></i>À venir ({{ planifiees|length }})</h5>
+    {% if planifiees|length > 0 %}
+        <div class="table-modern mb-4">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Durée</th>
+                    <th>Programme</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for seance in planifiees %}
+                    <tr>
+                        <td><i class="bi bi-calendar me-2 text-muted"></i>{{ seance.date ? seance.date|format_datetime(locale='fr', pattern='EEEE d MMMM yyyy') : '' }}</td>
+                        <td><span class="badge bg-warning bg-opacity-25 text-warning">{{ seance.duree }} min</span></td>
+                        <td>{{ seance.Programme ? seance.Programme.nom : '-' }}</td>
+                        <td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ seance.notes }}</td>
+                        <td>
+                            <a href="{{ path('app_seance_show', {'id': seance.id}) }}" class="btn btn-sm btn-outline-success me-1">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ path('app_seance_edit', {'id': seance.id}) }}" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="post" action="{{ path('app_seance_statut', {'id': seance.id, 'statut': 'completee'}) }}" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('statut' ~ seance.id) }}">
+                                <button type="submit" class="btn btn-sm btn-success" title="Marquer complétée">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card card-modern text-center py-4 mb-4">
+            <p class="text-muted mb-0"><i class="bi bi-calendar-x me-2"></i>Aucune séance planifiée</p>
+        </div>
+    {% endif %}
+
+    {# COMPLÉTÉES #}
+    <h5 class="mb-3"><i class="bi bi-check-circle me-2" style="color:#2ecc71;"></i>Historique ({{ completees|length }})</h5>
+    {% if completees|length > 0 %}
+        <div class="table-modern mb-4">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Durée</th>
+                    <th>Programme</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for seance in completees %}
+                    <tr>
+                        <td><i class="bi bi-calendar me-2 text-muted"></i>{{ seance.date ? seance.date|format_datetime(locale='fr', pattern='EEEE d MMMM yyyy') : '' }}</td>
+                        <td><span class="badge bg-success bg-opacity-25 text-success">{{ seance.duree }} min</span></td>
+                        <td>{{ seance.Programme ? seance.Programme.nom : '-' }}</td>
+                        <td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ seance.notes }}</td>
+                        <td>
+                            <a href="{{ path('app_seance_show', {'id': seance.id}) }}" class="btn btn-sm btn-outline-success me-1">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ path('app_seance_edit', {'id': seance.id}) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card card-modern text-center py-4 mb-4">
+            <p class="text-muted mb-0"><i class="bi bi-clipboard-x me-2"></i>Aucune séance complétée</p>
+        </div>
+    {% endif %}
+
+    {# ANNULÉES #}
+    {% if annulees|length > 0 %}
+        <h5 class="mb-3"><i class="bi bi-x-circle me-2" style="color:#e74c3c;"></i>Annulées ({{ annulees|length }})</h5>
+        <div class="table-modern mb-4">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Durée</th>
+                    <th>Programme</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for seance in annulees %}
+                    <tr>
+                        <td class="text-muted"><i class="bi bi-calendar me-2"></i>{{ seance.date ? seance.date|format_datetime(locale='fr', pattern='EEEE d MMMM yyyy') : '' }}</td>
+                        <td><span class="badge bg-danger bg-opacity-25 text-danger">{{ seance.duree }} min</span></td>
+                        <td>{{ seance.Programme ? seance.Programme.nom : '-' }}</td>
+                        <td>
+                            <a href="{{ path('app_seance_show', {'id': seance.id}) }}" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

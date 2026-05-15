@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+{% block title %}Séance du {{ seance.date ? seance.date|format_datetime(locale='fr', pattern='d MMMM yyyy') : '' }}{% endblock %}
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calendar-check me-2" style="color:#2ecc71;"></i>Détail de la séance</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_seance_edit', {'id': seance.id}) }}" class="btn btn-sport">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+            <a href="{{ path('app_seance_index') }}" class="btn btn-outline-secondary" style="border-radius:30px;">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card card-modern p-4 mb-4">
+                <h5 class="fw-bold mb-3">Informations</h5>
+
+                <p class="text-muted mb-1" style="font-size:13px;">Date</p>
+                <p class="fw-bold mb-3">
+                    <i class="bi bi-calendar me-2"></i>
+                    {{ seance.date ? seance.date|format_datetime(locale='fr', pattern='EEEE d MMMM yyyy') : '-' }}
+                </p>
+
+                <p class="text-muted mb-1" style="font-size:13px;">Durée</p>
+                <p class="mb-3">
+                    <span class="badge bg-success bg-opacity-25 text-success" style="font-size:14px;">{{ seance.duree }} minutes</span>
+                </p>
+
+                {% if seance.Programme %}
+                    <p class="text-muted mb-1" style="font-size:13px;">Programme</p>
+                    <p class="mb-3">
+                        <a href="{{ path('app_programme_show', {'id': seance.Programme.id}) }}" class="text-decoration-none">
+                            <i class="bi bi-journal-text me-1"></i>{{ seance.Programme.nom }}
+                        </a>
+                    </p>
+                {% endif %}
+
+                {% if seance.notes %}
+                    <p class="text-muted mb-1" style="font-size:13px;">Notes</p>
+                    <p class="mb-0">{{ seance.notes }}</p>
+                {% endif %}
+            </div>
+
+            <div class="card card-modern p-4">
+                <h6 class="fw-bold mb-3">Actions</h6>
+                {{ include('seance/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            {# Liste des exercices #}
+            <div class="card card-modern p-4 mb-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-activity me-2" style="color:#2ecc71;"></i>
+                    Exercices ({{ seance.seanceExercices|length }})
+                </h5>
+
+                {% if seance.seanceExercices|length > 0 %}
+                    {% for se in seance.seanceExercices %}
+                        <div class="d-flex align-items-start justify-content-between p-3 mb-2"
+                             style="background:#f8f9fa;border-radius:12px;">
+                            <div>
+                                <p class="fw-bold mb-1">
+                                    <i class="bi bi-dot" style="color:#2ecc71;font-size:1.5rem;"></i>
+                                    {{ se.exercice.nom }}
+                                </p>
+                                <div class="d-flex gap-3" style="font-size:13px;">
+                                    <span><i class="bi bi-arrow-repeat me-1 text-muted"></i>{{ se.series }} séries</span>
+                                    <span><i class="bi bi-123 me-1 text-muted"></i>{{ se.repetitions }} reps</span>
+                                    {% if se.poids %}
+                                        <span><i class="bi bi-speedometer me-1 text-muted"></i>{{ se.poids }} kg</span>
+                                    {% endif %}
+                                </div>
+                                {% if se.notes %}
+                                    <p class="text-muted mt-1 mb-0" style="font-size:12px;">{{ se.notes }}</p>
+                                {% endif %}
+                            </div>
+                            <form method="post"
+                                  action="{{ path('app_seance_exercice_delete', {'id': seance.id, 'exerciceId': se.id}) }}"
+                                  onsubmit="return confirm('Supprimer cet exercice ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_se' ~ se.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" style="border-radius:20px;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted text-center py-3">
+                        <i class="bi bi-clipboard-x" style="font-size:2rem;"></i><br>
+                        Aucun exercice ajouté
+                    </p>
+                {% endif %}
+            </div>
+
+            {# Formulaire ajout exercice #}
+            <div class="card card-modern p-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-plus-circle me-2" style="color:#2ecc71;"></i>
+                    Ajouter un exercice
+                </h5>
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        {{ form_label(form.exercice) }}
+                        {{ form_widget(form.exercice) }}
+                    </div>
+                    <div class="col-4 mb-3">
+                        {{ form_label(form.series) }}
+                        {{ form_widget(form.series) }}
+                    </div>
+                    <div class="col-4 mb-3">
+                        {{ form_label(form.repetitions) }}
+                        {{ form_widget(form.repetitions) }}
+                    </div>
+                    <div class="col-4 mb-3">
+                        {{ form_label(form.poids) }}
+                        {{ form_widget(form.poids) }}
+                    </div>
+                    <div class="col-12 mb-3">
+                        {{ form_label(form.notes) }}
+                        {{ form_widget(form.notes) }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-sport w-100">
+                    <i class="bi bi-plus-circle me-2"></i>Ajouter
+                </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
