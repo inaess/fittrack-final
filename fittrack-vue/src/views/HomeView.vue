@@ -239,7 +239,7 @@ const exercicesApercu = ref([
   display: block;
   font-size: 28px;
   font-weight: 700;
-  color: #2ecc71;
+  color: #34d058;
 }
 
 .stat-label {
@@ -263,7 +263,7 @@ const exercicesApercu = ref([
   display: inline-block;
   font-size: 14px;
   font-weight: 600;
-  color: #2ecc71;
+  color: #1a8a45;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 12px;
